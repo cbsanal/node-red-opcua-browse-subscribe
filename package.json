@@ -1,0 +1,24 @@
+{
+  "name": "@cbsanal/node-red-opcua-browse-subscribe",
+  "version": "0.0.1",
+  "description": "A Node-RED node to browse and subscribe via OPC UA.",
+  "author": {
+    "name": "Can Berk Sanal",
+    "email": "sanalcanberk@gmail.com"
+  },
+  "node-red": {
+    "version": ">=2.0.0",
+    "nodes": {
+      "opcua-browse-subscribe": "opcua-browse-subscribe.js"
+    }
+  },
+  "keywords": [
+    "opcua",
+    "node opcua",
+    "node-red"
+  ],
+  "engines": {
+    "node": ">=12"
+  },
+  "license": "MIT"
+}
