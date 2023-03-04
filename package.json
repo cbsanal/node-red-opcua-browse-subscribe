@@ -9,7 +9,8 @@
   "node-red": {
     "version": ">=2.0.0",
     "nodes": {
-      "opcua-browse-subscribe": "opcua-browse-subscribe.js"
+      "opcua-browse-subscribe": "nodes/opcua-browse-subscribe.js",
+      "opcua-endpoint-instance": "nodes/opcua-endpoint-instance.js"
     }
   },
   "keywords": [
@@ -20,5 +21,10 @@
   "engines": {
     "node": ">=12"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "node-opcua": "2.87.0",
+    "node-opcua-client": "2.87.0",
+    "node-opcua-client-crawler": "2.87.0"
+  }
 }
