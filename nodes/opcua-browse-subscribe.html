@@ -3,6 +3,7 @@
     category: "OPCUA",
     color: "#00cccc",
     defaults: {
+      name: { value: "" },
       endpoint: { value: "", required: true, type: "Opcua-Endpoint-Instance" },
       topic: { value: "" },
       time: { value: 1 },
@@ -12,25 +13,62 @@
     outputs: 1,
     align: "left",
     icon: "font-awesome/fa-wifi",
-    label: "OPCUA Browse & Sub",
-    oneditprepare: function () {},
-    oneditsave: function () {},
-    oneditcancel: function () {},
+    label: function () {
+      return this.name || "OPCUA Browse & Sub";
+    },
+    oneditprepare: function () {
+      this.stopReq = false;
+      const fetch = () => {
+        if (!this.stopReq) {
+          $.getJSON("node-list/" + this.id, function (foundItems) {
+            if (foundItems !== "Loading") {
+              $("#check-action").prop("disabled", false);
+              this.items = [...foundItems];
+              $("#loading").empty();
+              this.stopReq = true;
+            } else {
+              $("#check-action").prop("disabled", true);
+              $("#check-action").prop("checked", false);
+              $("#loading").text("Loading...");
+              $("#node-input-option-container").empty();
+              setTimeout(fetch, 1000);
+            }
+          }).fail((jqxhr, textStatus, error) => {
+            if (error === "Not Found") {
+              this.stopReq = true;
+              $("#check-action").prop("disabled", true);
+              $("#loading").text("Fill necessary areas and press deploy.");
+            }
+          });
+        }
+      };
+      fetch();
+    },
+    oneditsave: function () {
+      this.stopReq = true;
+    },
+    oneditcancel: function () {
+      this.stopReq = true;
+    },
   });
 </script>
 
-<script type="text/x-red" data-template-name="Opcua-Browse-Subscribe">
+<script type="text/html" data-template-name="Opcua-Browse-Subscribe">
   <div class="form-row">
-      <label for="node-input-endpoint"><i class="fa fa-wifi"></i> Endpoint</label>
-      <input type="text" id="node-input-endpoint">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Default is OPCUA Browse & Sub" />
+  </div>
+  <div class="form-row">
+    <label for="node-input-endpoint"><i class="fa fa-wifi"></i> Endpoint</label>
+    <input type="text" id="node-input-endpoint" />
   </div>
   <div class="form-row">
     <label for="node-input-topic"><i class="fa fa-search"></i> Topic</label>
-    <input type="text" id="node-input-topic" placeholder="ns=0;i=85">
+    <input type="text" id="node-input-topic" placeholder="Default is ns=0;i=85 (root)" />
   </div>
   <div class="form-row" id="node-input-timerow">
     <label for="node-input-time"><i class="fa fa-clock-o"></i> Sub Interval</label>
-    <input type="number" id="node-input-time" placeholder="number" style="width:35%;" >
+    <input type="number" id="node-input-time" placeholder="number" min="1" style="width:35%;" />
     <select style="width:35%;" id="node-input-timeUnit">
       <option value="ms">millisecond(s)</option>
       <option value="s">second(s)</option>
@@ -45,7 +83,8 @@
         <div style="width:calc(100% - 15px); display:flex;gap:10px;align-items:center;">
           <div style="min-width:20%;text-align:center;">
             <div class="display:flex; gap:5px;align-items:center;">
-              <input style="width:13px;margin:0;margin-bottom:2px;" id="check-action" type="checkbox" /> <span style="font-weight:bold;">Include</span>
+              <input style="width:13px;margin:0;margin-bottom:2px;" id="check-action" type="checkbox" />
+              <span style="font-weight:bold;">Include</span>
             </div>
           </div>
           <div style="width:25%;text-align:center;font-weight:bold;">Name</div>
@@ -54,7 +93,7 @@
         </div>
       </div>
       <div id="node-input-option-container-div" style="height: 257px;overflow-y:scroll;position:relative;">
-        <div id='loading' style='position: absolute;left:50%;transform:translateX(-50%);top:115px;font-weight:bold;font-size: 20px;white-space: nowrap;'></div>
+        <div id="loading" style="position: absolute;left:50%;transform:translateX(-50%);top:115px;font-weight:bold;font-size: 20px;white-space: nowrap;"></div>
         <ol id="node-input-option-container" style="list-style-type:none; margin: 0;"></ol>
       </div>
     </div>
@@ -62,4 +101,8 @@
   <div style="display:flex;align-items:center;gap: 10px;margin:10px 0;" class="form-row">
     <button id="refresh"><i class="fa fa-refresh"></i> Refresh</button>
   </div>
+</script>
+
+<script type="text/html" data-help-name="Opcua-Browse-Subscribe">
+  <p>A simple node that allows you to browse all child nodes under the topic you enter and subscribe the checked ones.</p>
 </script>

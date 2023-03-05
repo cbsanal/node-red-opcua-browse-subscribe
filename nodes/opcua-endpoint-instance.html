@@ -3,44 +3,49 @@
     category: "config",
     defaults: {
       endpoint: { value: "", required: true },
-      secpolicy: { value: "" },
-      secmode: { value: "" },
       user: { value: "" },
       password: { value: "" },
+      secpolicy: { value: "None" },
+      secmode: { value: "None" },
     },
-    label: function () {},
-    oneditprepare: function () {},
+    label: function () {
+      return this.endpoint || "Opcua Endpoint Instance";
+    },
   });
 </script>
 
-<script type="text/x-red" data-template-name="Opcua-Endpoint-Instance">
+<script type="text/html" data-template-name="Opcua-Endpoint-Instance">
   <div class="form-row">
     <span><i class="fa fa-info"></i> Only endpoint area is mandatory. Other options are optionals.</span>
   </div>
   <div class="form-row">
-    <label for="node-input-endpoint"><i class="fa fa-wifi"></i> Endpoint <span style="color:red;">*</span></label>
-    <input type="text" id="node-input-endpoint">
+    <label for="node-config-input-endpoint"><i class="fa fa-wifi"></i> Endpoint <span style="color:red;">*</span></label>
+    <input type="text" id="node-config-input-endpoint">
   </div>
   <h3><i class="fa fa-user"></i> User</h6>
   <div class="form-row">
-    <label for="node-input-user">Name</label>
-    <input type="text" id="node-input-user">
+    <label for="node-config-input-user">Name</label>
+    <input type="text" id="node-config-input-user">
   </div>
   <div class="form-row">
-    <label for="node-input-password">Password</label>
-    <input type="password" id="node-input-password">
+    <label for="node-config-input-password">Password</label>
+    <input type="password" id="node-config-input-password">
   </div>
   <h3><i class="fa fa-shield"></i> Security</h6>
   <div class="form-row">
-    <label for="node-input-secpolicy">Policy</label>
-    <select style="width: 70%;" type="text" id="node-input-secpolicy">
+    <label for="node-config-input-secpolicy">Policy</label>
+    <select style="width: 70%;" type="text" id="node-config-input-secpolicy">
       <option value="None">None</option>
     </select>
   </div>
   <div class="form-row">
-    <label for="node-input-secmode">Mode</label>
-    <select style="width: 70%;" type="text" id="node-input-secmode">
+    <label for="node-config-input-secmode">Mode</label>
+    <select style="width: 70%;" type="text" id="node-config-input-secmode">
       <option value="None">None</option>
     </select>
   </div>
+</script>
+
+<script type="text/html" data-help-name="Opcua-Endpoint-Instance">
+  <p>A simple instance node that holds OPCUA connection info.</p>
 </script>

@@ -3,8 +3,11 @@ module.exports = function (RED) {
 
   function OpcuaEndpointInstance(config) {
     RED.nodes.createNode(this, config);
-
-    node.on("close", async () => {});
+    this.endpoint = config.endpoint;
+    this.secpolicy = config.secpolicy;
+    this.secmode = config.secmode;
+    this.user = config.user;
+    this.password = config.password;
   }
   RED.nodes.registerType("Opcua-Endpoint-Instance", OpcuaEndpointInstance);
 };
