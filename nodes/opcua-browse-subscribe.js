@@ -1,8 +1,8 @@
 module.exports = function (RED) {
   "use strict";
-  const { createClient, createSubscription } = require("../utils/creatingThings");
-  const { clearEverything, clearSubscription } = require("../utils/clearingThings");
-  const { startCrawling } = require("../utils/crawling");
+  const { createSession, createClient, createSubscription } = require("../utils/creating");
+  const { clearEverything } = require("../utils/clearing");
+  const { startCrawling, subscribeToItems } = require("../utils/actions");
 
   RED.httpAdmin.get("/node-list/:nodeId", function (req, res) {
     const nodeId = req.params.nodeId;
@@ -24,9 +24,10 @@ module.exports = function (RED) {
     this.topic = config.topic || "ns=0;i=85";
     this.items = config.items;
     this.loading = true;
+    this.monitoredItems = [];
     this.time = config.time;
     this.timeUnit = config.timeUnit;
-    this.monitoredItems = config.monitoredItems;
+    this.checkedItems = config.checkedItems;
     this.interval = (() => {
       if (this.timeUnit === "ms") return this.time;
       else if (this.timeUnit === "s") return this.time * 1000;
@@ -35,15 +36,40 @@ module.exports = function (RED) {
     })();
     this.client = null;
     this.session = null;
+    this.subscription = null;
     const node = this;
 
     (async () => {
-      await utils.createClient(node);
+      try {
+        node.status({ fill: "blue", shape: "dot", text: "Connecting..." });
+        node.client = createClient(node);
+        await node.client.connect(node.opcuaEndpoint.endpoint);
+        node.session = await createSession(node);
+        node.items = await startCrawling(node);
+        node.loading = false;
+        node.status({ fill: "green", shape: "dot", text: "Found all variables." });
+        node.subscription = createSubscription(node);
+        node.monitoredItems = subscribeToItems(node);
+        if (node.monitoredItems === 0) {
+          node.status({ fill: "green", shape: "dot", text: "Check items to subscribe." });
+        } else {
+          node.status({ fill: "green", shape: "dot", text: "Subscribed to variables." });
+        }
+      } catch (error) {
+        node.status({ fill: "red", shape: "dot", text: error });
+      }
     })();
 
-    const startCrawling = () => {};
-
-    node.on("close", async () => {});
+    node.on("close", async (done) => {
+      try {
+        node.status({ fill: "blue", shape: "dot", text: "Clearing previous session..." });
+        await clearEverything(node);
+        done();
+      } catch (error) {
+        node.status({ fill: "red", shape: "dot", text: error });
+      }
+    });
   }
+
   RED.nodes.registerType("Opcua-Browse-Subscribe", OpcuaBrowseSubscribe);
 };
