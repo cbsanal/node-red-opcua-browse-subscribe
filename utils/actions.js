@@ -1,5 +1,6 @@
 const NodeCrawler = require("node-opcua-client-crawler").NodeCrawler;
 const opcua = require("node-opcua");
+const { delay } = require("./general");
 
 const startCrawling = async (node) => {
   try {
@@ -17,6 +18,7 @@ const startCrawling = async (node) => {
     crawler.dispose();
     return [...items.slice(0, 100)];
   } catch (error) {
+    console.log(error);
     throw "Can not crawl!";
   }
 };
@@ -38,12 +40,15 @@ const subscribeToItems = async (node) => {
         node.send({
           payload: dataValue.value.value,
           name: item.name,
+          nodeId: item.nodeId,
         });
       });
       monitoredItems.push(monitoredItem);
+      await delay(80);
     }
     return monitoredItems;
   } catch (error) {
+    console.log(error);
     throw "Can not subscribe items!";
   }
 };

@@ -11,7 +11,7 @@ module.exports = function (RED) {
       if (node.loading) {
         res.json("Loading");
       } else {
-        res.json(node.items);
+        res.json({ items: node.items, checkedItems: node.checkedItems });
       }
     } else {
       res.status(404).send("Not found");
@@ -21,7 +21,7 @@ module.exports = function (RED) {
   function OpcuaBrowseSubscribe(config) {
     RED.nodes.createNode(this, config);
     this.opcuaEndpoint = RED.nodes.getNode(config.endpoint);
-    this.topic = config.topic || "ns=0;i=85";
+    this.topic = config.topic || "ns=4;s=Demo.Dynamic.Scalar";
     this.items = config.items;
     this.loading = true;
     this.monitoredItems = [];
@@ -49,8 +49,8 @@ module.exports = function (RED) {
         node.loading = false;
         node.status({ fill: "green", shape: "dot", text: "Found all variables." });
         node.subscription = createSubscription(node);
-        node.monitoredItems = subscribeToItems(node);
-        if (node.monitoredItems === 0) {
+        node.monitoredItems = await subscribeToItems(node);
+        if (node.monitoredItems.length === 0) {
           node.status({ fill: "green", shape: "dot", text: "Check items to subscribe." });
         } else {
           node.status({ fill: "green", shape: "dot", text: "Subscribed to variables." });
@@ -60,14 +60,14 @@ module.exports = function (RED) {
       }
     })();
 
-    node.on("close", async (done) => {
+    node.on("close", async (_, done) => {
       try {
         node.status({ fill: "blue", shape: "dot", text: "Clearing previous session..." });
         await clearEverything(node);
-        done();
       } catch (error) {
         node.status({ fill: "red", shape: "dot", text: error });
       }
+      done();
     });
   }
 

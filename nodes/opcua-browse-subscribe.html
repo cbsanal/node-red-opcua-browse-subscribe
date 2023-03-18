@@ -20,14 +20,31 @@
     },
     oneditprepare: function () {
       this.stopReq = false;
+      const renderItems = (foundItems) => {
+        let itemsHtml = "";
+        foundItems.forEach((item, i) => {
+          itemsHtml += `
+          <div style="display:flex;align-items:center${i !== foundItems.length - 1 ? ";border-bottom:1px solid gray;" : ";"}padding:5px 0;">
+            <input class="node-input-option-include" style="width:20%;margin-bottom:1px;" type="checkbox" ${this.checkedItems.find((checkedItem) => checkedItem.nodeId === item.nodeId) ? "checked" : ""} />
+            <div class="node-input-option-name" style="width:25%;white-space: nowrap;text-align:center;overflow: hidden;text-overflow: ellipsis">${item.name}</div>
+            <div class="node-input-option-nodeId" style="width:35%;white-space: nowrap;text-align:center;overflow: hidden;text-overflow: ellipsis;">${item.nodeId}</div>
+            <div class="node-input-option-type" style="width:20%;white-space: nowrap;text-align:center;overflow: hidden;text-overflow: ellipsis;">${item.dataType}</div>
+          </div>
+          `;
+        });
+        $("#node-input-option-container").html(itemsHtml);
+      };
       const fetch = () => {
         if (!this.stopReq) {
-          $.getJSON("node-list/" + this.id, function (foundItems) {
-            if (foundItems !== "Loading") {
-              $("#check-action").prop("disabled", false);
-              this.items = [...foundItems];
+          const node = this;
+          $.getJSON("node-list/" + this.id, function (res) {
+            if (res !== "Loading") {
+              node.stopReq = true;
+              node.items = [...res.items];
+              node.checkedItems = [...res.checkedItems];
               $("#loading").empty();
-              this.stopReq = true;
+              renderItems(node.items);
+              $("#check-action").prop("disabled", false);
             } else {
               $("#check-action").prop("disabled", true);
               $("#check-action").prop("checked", false);
@@ -37,17 +54,46 @@
             }
           }).fail((jqxhr, textStatus, error) => {
             if (error === "Not Found") {
-              this.stopReq = true;
+              node.stopReq = true;
               $("#check-action").prop("disabled", true);
               $("#loading").text("Fill necessary areas and press deploy.");
             }
           });
         }
       };
-      fetch();
+      if (this.items.length === 0) {
+        fetch();
+      } else {
+        renderItems(this.items);
+      }
+      $("#check-action").click(() => {
+        if ($("#check-action").is(":checked")) {
+          this.checkedItems = [...this.items];
+        } else {
+          this.checkedItems = [];
+        }
+        renderItems(this.items);
+      });
+      if (this.items.length !== 0 && this.items.length === this.checkedItems.length) {
+        $("#check-action").prop("checked", true);
+      }
     },
     oneditsave: function () {
       this.stopReq = true;
+      const node = this;
+      const items = $("#node-input-option-container").children();
+      node.checkedItems = [];
+      items.each(function (i) {
+        const option = $(this);
+        if (option.find(".node-input-option-include").is(":checked")) {
+          const o = {
+            name: option.find(".node-input-option-name").text(),
+            nodeId: option.find(".node-input-option-nodeId").text(),
+            dataType: option.find(".node-input-option-type").text(),
+          };
+          node.checkedItems.push(o);
+        }
+      });
     },
     oneditcancel: function () {
       this.stopReq = true;
@@ -82,7 +128,7 @@
     <label style="display:block;white-space: nowrap;"><i class="fa fa-list-alt"></i> OPCUA Items</label>
     <div style="display:inline-block; width:100%; border:1px solid #ccc; border-radius:5px; box-sizing:border-box;">
       <div style="background: cornsilk; width:100%; display: inline-block; padding:10px 0; border-top:0px solid; border-radius:5px 5px 0 0; border-bottom:1px solid #ccc;">
-        <div style="width:calc(100% - 15px); display:flex;gap:10px;align-items:center;">
+        <div style="width:calc(100% - 15px);display:flex;align-items:center;">
           <div style="min-width:20%;text-align:center;">
             <div class="display:flex; gap:5px;align-items:center;">
               <input style="width:13px;margin:0;margin-bottom:2px;" id="check-action" type="checkbox" />
@@ -99,9 +145,6 @@
         <ol id="node-input-option-container" style="list-style-type:none; margin: 0;"></ol>
       </div>
     </div>
-  </div>
-  <div style="display:flex;align-items:center;gap: 10px;margin:10px 0;" class="form-row">
-    <button id="refresh"><i class="fa fa-refresh"></i> Refresh</button>
   </div>
 </script>
 
