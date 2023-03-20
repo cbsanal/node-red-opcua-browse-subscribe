@@ -18,8 +18,11 @@ This node depends on following libraries:
 
 ## Usage
 
+- ![edit endpoint](./readMeImages/add-endpoint.png)
 - click on edit icon
+- ![endpoint node](./readMeImages/endpoint-areas.png)
 - fill necessary areas for connecting your PLC.
+- ![topic](./readMeImages/topic.png)
 - enter the topic you want to search (default is ns=0;i=85)
 - after pressing deploy, it will show all nodes under the topic you entered
 - check the items you want to subscribe and press deploy
