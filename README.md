@@ -18,15 +18,12 @@ This node depends on following libraries:
 
 ## Usage
 
-- ![edit endpoint](./readMeImages/add-endpoint.png)
-- click on edit icon
-- ![endpoint node](./readMeImages/endpoint-areas.png)
-- fill necessary areas for connecting your PLC.
-- ![topic](./readMeImages/topic.png)
-- enter the topic you want to search (default is ns=0;i=85)
-- after pressing deploy, it will show all nodes under the topic you entered
-- check the items you want to subscribe and press deploy
-- output value will be like this:
+- Click add new endpoint instance.
+- Fill necessary areas for connecting your PLC.
+- Enter the topic you want to search (default is ns=0;i=85).
+- After pressing deploy, it will show all nodes under the topic you entered.
+- Check the items you want to subscribe and press deploy.
+- Output value will be like this:
 
 ```
 {
@@ -38,6 +35,6 @@ This node depends on following libraries:
 
 ## New Features
 
-- pagination will be added, right now max 100 items can be rendered in table
-- filtering system will be added (e.g show only float type nodes)
-- i'm open to any pull request or issue report
+- Pagination will be added, right now max 100 items can be rendered in table.
+- Filtering system will be added (e.g show only float type nodes).
+- I'm open to any pull request or issue report.
