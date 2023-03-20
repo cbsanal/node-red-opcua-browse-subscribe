@@ -5,7 +5,7 @@ const createClient = (node) => {
     if (node.opcuaEndpoint) {
       return opcua.OPCUAClient.create({
         connectionStrategy: {
-          maxRetry: 1, // max try number to connect server
+          maxRetry: 10, // max try number to connect server
           initialDelay: 5000, // 5s
           maxDelay: 30000, // 30s,
         },
