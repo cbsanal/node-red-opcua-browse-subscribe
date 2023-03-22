@@ -4,19 +4,19 @@ const clearEverything = async (node) => {
   try {
     for (const item of node.monitoredItems) {
       await item.terminate();
-      await delay(60);
+      await delay(30);
     }
     if (node.subscription) {
       await node.subscription.terminate();
-      await delay(80);
+      await delay(50);
     }
     if (node.session) {
       await node.session.close();
-      await delay(80);
+      await delay(50);
     }
     if (node.client) {
       await node.client.disconnect();
-      await delay(80);
+      await delay(50);
     }
   } catch (error) {
     throw "Error happened on cleaning!";

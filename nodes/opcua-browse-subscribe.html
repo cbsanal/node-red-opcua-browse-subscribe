@@ -8,6 +8,8 @@
       topic: { value: "" },
       time: { value: 1 },
       timeUnit: { value: "s" },
+      nodeClass: { value: "All" },
+      dataType: { value: "All" },
       items: { value: [] },
       checkedItems: { value: [] },
     },
@@ -104,24 +106,68 @@
 <script type="text/html" data-template-name="Opcua-Browse-Subscribe">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-    <input type="text" id="node-input-name" placeholder="Default is OPCUA Browse & Sub" />
+    <input style="width: calc(100% - 104px);" type="text" id="node-input-name" placeholder="Default is OPCUA Browse & Sub" />
   </div>
   <div class="form-row">
     <label for="node-input-endpoint"><i class="fa fa-wifi"></i> Endpoint</label>
-    <input type="text" id="node-input-endpoint" />
+    <input style="width: calc(100% - 104px);" type="text" id="node-input-endpoint" />
   </div>
   <div class="form-row">
     <label for="node-input-topic"><i class="fa fa-search"></i> Topic</label>
-    <input type="text" id="node-input-topic" placeholder="Default is ns=0;i=85 (root)" />
+    <input style="width: calc(100% - 104px);" type="text" id="node-input-topic" placeholder="Default is ns=0;i=85 (root)" />
   </div>
-  <div class="form-row" id="node-input-timerow">
+  <div class="form-row" style="display: flex;align-items: center;gap: 4px;">
     <label for="node-input-time"><i class="fa fa-clock-o"></i> Sub Interval</label>
-    <input type="number" id="node-input-time" placeholder="number" min="1" style="width:35%;" />
-    <select style="width:35%;" id="node-input-timeUnit">
+    <input type="number" id="node-input-time" placeholder="number" min="1" style="flex: 1;" />
+    <select style="flex: 1;" id="node-input-timeUnit">
       <option value="ms">millisecond(s)</option>
       <option value="s">second(s)</option>
       <option value="m">minute(s)</option>
       <option value="h">hour(s)</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-nodeClass"><i class="fa fa-book"></i> NodeClass</label>
+    <select style="width: calc(100% - 104px);" id="node-input-nodeClass">
+      <option value="All">All</option>
+      <option value="datatype">DataType</option>
+      <option value="invalid">Invalid</option>
+      <option value="method">Method</option>
+      <option value="object">Object</option>
+      <option value="objectType">ObjectType</option>
+      <option value="referenceType">ReferenceType</option>
+      <option value="unspecified">Unspecified</option>
+      <option value="variable">Variable</option>
+      <option value="variableType">VariableType</option>
+      <option value="view">View</option>
+    </select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-dataType"><i class="fa fa-bandcamp"></i> DataType</label>
+    <select style="width: calc(100% - 104px);" id="node-input-dataType">
+      <option value="All">All</option>
+      <option value="ms">Boolean</option>
+      <option value="ms">Byte</option>
+      <option value="m">ByteString</option>
+      <option value="h">DateTime</option>
+      <option value="h">Double</option>
+      <option value="h">ExpandedNodeId</option>
+      <option value="h">Float</option>
+      <option value="h">Guid</option>
+      <option value="h">Int16</option>
+      <option value="h">Int32</option>
+      <option value="h">Int64</option>
+      <option value="h">LocalizedText</option>
+      <option value="h">NodeId</option>
+      <option value="h">QualifiedName</option>
+      <option value="h">SByte</option>
+      <option value="h">String</option>
+      <option value="h">Structure</option>
+      <option value="h">Time</option>
+      <option value="h">UInt16</option>
+      <option value="h">UInt32</option>
+      <option value="h">UInt64</option>
+      <option value="s">XmlElement</option>
     </select>
   </div>
   <div class="form-row node-input-option-container-row" style=" margin-bottom:0px; width:100%; min-width:600px">

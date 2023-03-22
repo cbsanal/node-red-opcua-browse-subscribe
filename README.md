@@ -37,4 +37,5 @@ This node depends on following libraries:
 
 - Pagination will be added, right now max 100 items can be rendered in table.
 - Filtering system will be added (e.g show only float type nodes).
+- Security policy and Security mode options will be added.
 - I'm open to any pull request or issue report.

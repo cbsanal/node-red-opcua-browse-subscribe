@@ -21,6 +21,10 @@
   "engines": {
     "node": ">=12"
   },
+  "bugs": {
+    "url": "https://github.com/cbsanal/node-red-opcua-browse-subscribe/issues",
+    "email": "sanalcanberk@gmail.com"
+  },
   "license": "MIT",
   "dependencies": {
     "node-opcua": "2.87.0",

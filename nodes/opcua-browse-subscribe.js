@@ -21,7 +21,7 @@ module.exports = function (RED) {
   function OpcuaBrowseSubscribe(config) {
     RED.nodes.createNode(this, config);
     this.opcuaEndpoint = RED.nodes.getNode(config.endpoint);
-    this.topic = config.topic || "ns=0;i=85";
+    this.topic = config.topic || "ns=4;s=Demo.Dynamic";
     this.items = config.items;
     this.loading = true;
     this.monitoredItems = [];
