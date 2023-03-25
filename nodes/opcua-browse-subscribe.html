@@ -10,8 +10,10 @@
       timeUnit: { value: "s" },
       nodeClass: { value: "All" },
       dataType: { value: "All" },
+      crushResCheckedItems: { value: false },
       items: { value: [] },
       checkedItems: { value: [] },
+      isCheckedItemsChanged: { value: false },
     },
     inputs: 0,
     outputs: 1,
@@ -43,14 +45,17 @@
             if (res !== "Loading") {
               node.stopReq = true;
               node.items = [...res.items];
-              node.checkedItems = [...res.checkedItems];
-              $("#loading").empty();
+              node.checkedItems = node.crushResCheckedItems ? node.checkedItems : [...res.checkedItems];
+              $("#status").empty();
+              if (node.items.length === 0) {
+                $("#status").text("No item found...");
+              }
               renderItems(node.items);
               $("#check-action").prop("disabled", false);
             } else {
               $("#check-action").prop("disabled", true);
               $("#check-action").prop("checked", false);
-              $("#loading").text("Loading...");
+              $("#status").text("Loading...");
               $("#node-input-option-container").empty();
               setTimeout(fetch, 1000);
             }
@@ -58,16 +63,12 @@
             if (error === "Not Found") {
               node.stopReq = true;
               $("#check-action").prop("disabled", true);
-              $("#loading").text("Fill necessary areas and press deploy.");
+              $("#status").text("Fill necessary areas and press deploy.");
             }
           });
         }
       };
-      if (this.items.length === 0) {
-        fetch();
-      } else {
-        renderItems(this.items);
-      }
+      fetch();
       $("#check-action").click(() => {
         if ($("#check-action").is(":checked")) {
           this.checkedItems = [...this.items];
@@ -75,6 +76,13 @@
           this.checkedItems = [];
         }
         renderItems(this.items);
+      });
+      $(".node-input-option-include").click(() => {
+        if ($("#check-action").is(":checked")) {
+          this.checkedItems = [...this.items];
+        } else {
+          $("#check-action").prop("checked", false);
+        }
       });
       if (this.items.length !== 0 && this.items.length === this.checkedItems.length) {
         $("#check-action").prop("checked", true);
@@ -96,6 +104,7 @@
           node.checkedItems.push(o);
         }
       });
+      this.crushResCheckedItems = true;
     },
     oneditcancel: function () {
       this.stopReq = true;
@@ -130,44 +139,48 @@
     <label for="node-input-nodeClass"><i class="fa fa-book"></i> NodeClass</label>
     <select style="width: calc(100% - 104px);" id="node-input-nodeClass">
       <option value="All">All</option>
-      <option value="datatype">DataType</option>
-      <option value="invalid">Invalid</option>
-      <option value="method">Method</option>
-      <option value="object">Object</option>
-      <option value="objectType">ObjectType</option>
-      <option value="referenceType">ReferenceType</option>
-      <option value="unspecified">Unspecified</option>
-      <option value="variable">Variable</option>
-      <option value="variableType">VariableType</option>
-      <option value="view">View</option>
+      <option value="64">DataType</option>
+      <option value="4294967295">Invalid</option>
+      <option value="4">Method</option>
+      <option value="1">Object</option>
+      <option value="8">ObjectType</option>
+      <option value="32">ReferenceType</option>
+      <option value="0">Unspecified</option>
+      <option value="2">Variable</option>
+      <option value="16">VariableType</option>
+      <option value="128">View</option>
     </select>
   </div>
   <div class="form-row">
     <label for="node-input-dataType"><i class="fa fa-bandcamp"></i> DataType</label>
     <select style="width: calc(100% - 104px);" id="node-input-dataType">
       <option value="All">All</option>
-      <option value="ms">Boolean</option>
-      <option value="ms">Byte</option>
-      <option value="m">ByteString</option>
-      <option value="h">DateTime</option>
-      <option value="h">Double</option>
-      <option value="h">ExpandedNodeId</option>
-      <option value="h">Float</option>
-      <option value="h">Guid</option>
-      <option value="h">Int16</option>
-      <option value="h">Int32</option>
-      <option value="h">Int64</option>
-      <option value="h">LocalizedText</option>
-      <option value="h">NodeId</option>
-      <option value="h">QualifiedName</option>
-      <option value="h">SByte</option>
-      <option value="h">String</option>
-      <option value="h">Structure</option>
-      <option value="h">Time</option>
-      <option value="h">UInt16</option>
-      <option value="h">UInt32</option>
-      <option value="h">UInt64</option>
-      <option value="s">XmlElement</option>
+      <option value="1">Boolean</option>
+      <option value="3">Byte</option>
+      <option value="15">ByteString</option>
+      <option value="23">DataValue</option>
+      <option value="13">DateTime</option>
+      <option value="25">DiagnosticInfo</option>
+      <option value="11">Double</option>
+      <option value="18">ExpandedNodeId</option>
+      <option value="22">ExtensionObject</option>
+      <option value="10">Float</option>
+      <option value="14">Guid</option>
+      <option value="4">Int16</option>
+      <option value="6">Int32</option>
+      <option value="8">Int64</option>
+      <option value="21">LocalizedText</option>
+      <option value="17">NodeId</option>
+      <option value="0">Null</option>
+      <option value="20">QualifiedName</option>
+      <option value="2">SByte</option>
+      <option value="19">StatusCode</option>
+      <option value="12">String</option>
+      <option value="5">UInt16</option>
+      <option value="7">UInt32</option>
+      <option value="9">UInt64</option>
+      <option value="24">Variant</option>
+      <option value="16">XmlElement</option>
     </select>
   </div>
   <div class="form-row node-input-option-container-row" style=" margin-bottom:0px; width:100%; min-width:600px">
@@ -187,7 +200,7 @@
         </div>
       </div>
       <div id="node-input-option-container-div" style="height: 257px;overflow-y:scroll;position:relative;">
-        <div id="loading" style="position: absolute;left:50%;transform:translateX(-50%);top:115px;font-weight:bold;font-size: 20px;white-space: nowrap;"></div>
+        <div id="status" style="position: absolute;left:50%;transform:translateX(-50%);top:115px;font-weight:bold;font-size: 20px;white-space: nowrap;"></div>
         <ol id="node-input-option-container" style="list-style-type:none; margin: 0;"></ol>
       </div>
     </div>

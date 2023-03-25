@@ -28,6 +28,8 @@ module.exports = function (RED) {
     this.time = config.time;
     this.timeUnit = config.timeUnit;
     this.checkedItems = config.checkedItems;
+    this.nodeClass = config.nodeClass === "All" ? config.nodeClass : parseInt(config.nodeClass);
+    this.dataType = config.dataType === "All" ? config.dataType : parseInt(config.dataType);
     this.interval = (() => {
       if (this.timeUnit === "ms") return this.time;
       else if (this.timeUnit === "s") return this.time * 1000;

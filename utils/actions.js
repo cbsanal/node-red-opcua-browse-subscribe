@@ -8,11 +8,37 @@ const startCrawling = async (node) => {
     node.status({ fill: "blue", shape: "dot", text: "Browsing variables..." });
     const items = [];
     crawler.on("browsed", function (element) {
-      items.push({
-        nodeId: element.nodeId || "Unknown",
-        name: element.displayName?.text || "Unknown",
-        dataType: opcua.DataTypeIds[element.dataType?.value] || "Unknown",
-      });
+      if (node.nodeClass === "All" && node.dataType === "All") {
+        items.push({
+          nodeId: element.nodeId || "Unknown",
+          name: element.displayName?.text || "Unknown",
+          dataType: opcua.DataTypeIds[element.dataType?.value] || "Unknown",
+        });
+      } else if (node.nodeClass === "All" && node.dataType !== "All") {
+        if (node.dataType === element.dataType?.value) {
+          items.push({
+            nodeId: element.nodeId || "Unknown",
+            name: element.displayName?.text || "Unknown",
+            dataType: opcua.DataTypeIds[element.dataType?.value] || "Unknown",
+          });
+        }
+      } else if (node.nodeClass !== "All" && node.dataType === "All") {
+        if (node.nodeClass === element.nodeClass) {
+          items.push({
+            nodeId: element.nodeId || "Unknown",
+            name: element.displayName?.text || "Unknown",
+            dataType: opcua.DataTypeIds[element.dataType?.value] || "Unknown",
+          });
+        }
+      } else {
+        if (node.nodeClass === element.nodeClass && node.dataType === element.dataType?.value) {
+          items.push({
+            nodeId: element.nodeId || "Unknown",
+            name: element.displayName?.text || "Unknown",
+            dataType: opcua.DataTypeIds[element.dataType?.value] || "Unknown",
+          });
+        }
+      }
     });
     await crawler.read(node.topic);
     crawler.dispose();
@@ -44,7 +70,7 @@ const subscribeToItems = async (node) => {
         });
       });
       monitoredItems.push(monitoredItem);
-      await delay(80);
+      await delay(30);
     }
     return monitoredItems;
   } catch (error) {
