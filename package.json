@@ -1,6 +1,6 @@
 {
   "name": "@cbsanal/node-red-opcua-browse-subscribe",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple node that allows you to browse all child nodes under the topic you enter and subscribe the checked ones.",
   "author": {
     "name": "Can Berk Sanal",
