@@ -11,6 +11,12 @@
     "type": "git",
     "url": "git+https://github.com/cbsanal/node-red-opcua-browse-subscribe.git"
   },
+  "license": "MIT",
+  "keywords": [
+    "opcua",
+    "node-opcua",
+    "node-red"
+  ],
   "node-red": {
     "version": ">=2.0.0",
     "nodes": {
@@ -18,19 +24,12 @@
       "opcua-endpoint-instance": "nodes/opcua-endpoint-instance.js"
     }
   },
-  "keywords": [
-    "opcua",
-    "node-opcua",
-    "node-red"
-  ],
+  "bugs": {
+    "url": "https://github.com/cbsanal/node-red-opcua-browse-subscribe/issues"
+  },
   "engines": {
     "node": ">=12"
   },
-  "bugs": {
-    "url": "https://github.com/cbsanal/node-red-opcua-browse-subscribe/issues",
-    "email": "sanalcanberk@gmail.com"
-  },
-  "license": "MIT",
   "dependencies": {
     "node-opcua": "2.87.0",
     "node-opcua-client": "2.87.0",
