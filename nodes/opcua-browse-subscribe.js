@@ -48,6 +48,9 @@ module.exports = function (RED) {
         await node.client.connect(node.opcuaEndpoint.endpoint);
         node.session = await createSession(node);
         node.items = await startCrawling(node);
+        // On NodeClass or Datatype change, below 2 lines will clear old checked items if they are not in found items
+        const nodeItemsNodeIds = node.items.map((item) => item.nodeId.toString());
+        node.checkedItems = node.checkedItems.filter((checkedItem) => nodeItemsNodeIds.includes(checkedItem.nodeId));
         node.loading = false;
         node.status({ fill: "green", shape: "dot", text: "Found all variables." });
         node.subscription = createSubscription(node);

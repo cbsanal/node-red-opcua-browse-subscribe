@@ -6,6 +6,11 @@
     "name": "Can Berk Sanal",
     "email": "sanalcanberk@gmail.com"
   },
+  "homepage": "https://github.com/cbsanal/node-red-opcua-browse-subscribe#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbsanal/node-red-opcua-browse-subscribe.git"
+  },
   "node-red": {
     "version": ">=2.0.0",
     "nodes": {

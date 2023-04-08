@@ -56,7 +56,7 @@ const subscribeToItems = async (node) => {
       const monitoredItem = opcua.ClientMonitoredItem.create(
         node.subscription,
         {
-          nodeId: item.nodeId || item.topic,
+          nodeId: item.nodeId,
           attributeId: opcua.AttributeIds.Value,
         },
         { samplingInterval: node.interval, discardOldest: true, queueSize: 10 },
@@ -70,7 +70,7 @@ const subscribeToItems = async (node) => {
         });
       });
       monitoredItems.push(monitoredItem);
-      await delay(30);
+      await delay(20);
     }
     return monitoredItems;
   } catch (error) {
